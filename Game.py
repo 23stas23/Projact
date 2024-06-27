@@ -180,14 +180,22 @@ UI_Market_button_rect = UI_Market_button_image.get_rect()
 UI_Market_button_rect.x = UI_Market_slot_rect.x
 UI_Market_button_rect.y = UI_Market_slot_rect.y + 75
 
+#Market Objact
+Market_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"),(100, 120))
+Market_rect = Market_image.get_rect()
+Market_rect.x = 200
+Market_rect.y = 10
+
 #Market
 Market_active = False 
 def Market():
+    screen.blit(Market_image, Market_rect)
     if  Market_active:
         screen.blit(UI_Market_image, UI_Market_rect)
         screen.blit(UI_Market_slot_image, UI_Market_slot_rect)
         screen.blit(UI_Market_button_image, UI_Market_button_rect)
         screen.blit(UI_Market_slot_item_image, UI_Market_slot_item_rect)
+
 
 #UI Orders
 UI_Orders_image = pygame.transform.scale(pygame.image.load("Image/UI_Inventory.png"), (720, 500))
@@ -230,6 +238,30 @@ def Orders():
         screen.blit(UI_Orders_slot_item_image, UI_Orders_slot_item_rect)
         screen.blit(UI_Orders_button_image, UI_Orders_button_rect)
 
+#Order Progres
+Order_complect = False
+
+list_orders = {"0":{"image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "pay": 20, "count_need": 15},"1":{"image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "pay": 60, "count_need": 50}}
+
+#Chenge Orders
+num_items_list = 0
+count_items_need = 0
+timer_order = 0.0
+def Change_Order():
+    global num_items_list, UI_Orders_slot_item_image, timer_order
+    timer_order = 1/FPS/60
+    timer_order = round(timer_order, 2)
+    print(timer_order)
+    if Order_complect == False:
+        timer_order = 0.0
+        if timer_order == 2.0
+        num_item_list = randint(0, 1)
+        UI_Orders_slot_item_image =  list_orders[f"num_items_list"]["image"]
+        count_items_need = list_orders[f"num_items_list"]["count_need"]
+        
+        
+        
+    
 
 #Garden
 grow = False
@@ -305,7 +337,7 @@ while running:
                         Axe_active = False
                 print(Axe_active, Axe_bay)
             if event.key == pygame.K_e:
-                if Market_active == False and Inventoty_active == False and Order_active == False:
+                if Market_active == False and Inventoty_active == False and Order_active == False and Player.colliderect(Market_rect):
                     Market_active = True
                 else:
                     Market_active = False
@@ -325,6 +357,8 @@ while running:
                 level_bar = xp_level/max_level
                 aple_count += randint(10, 20)
                 grow = False
+            if event.button == 1 and UI_Orders_button_rect.collidepoint(event.pos) and Order_complect:
+                Order_complect = False
             
             if event.button == 1 and UI_Market_button_rect.collidepoint(event.pos) and coins >= 50:
                 if Axe_bay == False:
