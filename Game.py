@@ -75,6 +75,7 @@ coins_rect.y = 10
 #items
 items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": "", "cost": 100}}
 tools = {"axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 200}}
+UI_items = {"apple": {"id": 1, "name":"Apple", "image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), "cost": 100}}
 
 #Item
 apel_in_screen = True
@@ -116,7 +117,7 @@ UI_Inventory_slot_rect.x = UI_Inventory_rect.x + 20
 UI_Inventory_slot_rect.y = UI_Inventory_rect.y + 50
 
 #UI Inventory slot image
-UI_Inventory_slot_item_image = pygame.transform.scale(pygame.image.load(items["apple"]["image"]), (70,70))
+UI_Inventory_slot_item_image = UI_item["apple"]["image"]
 UI_Inventory_slot_item_rect = UI_Inventory_slot_item_image.get_rect()
 UI_Inventory_slot_item_rect.x = UI_Inventory_slot_rect.x + 5
 UI_Inventory_slot_item_rect.y = UI_Inventory_slot_rect.y + 5
@@ -215,10 +216,19 @@ UI_Orders_button_rect.y = UI_Orders_slot_rect.y + 75
 #Order
 Order_active = False
 
+#Order Objact
+Order_image = pygame.transfor.scale(pygame.image.load("Image/UI_slot_inventory.png"),(100, 120))
+Order_rect = Order_image.get_rect()
+Order_rect.x = 10
+Order_rect.y = 10
+
 def Orders():
-    screen.blit(UI_Orders_image, UI_Orders_rect)
-    screen.blit(UI_Orders_slot_image, UI_Orders_slot_rect)
-    screen.blit(UI_Orders_slot_item_image, UI_Orders_slot_item_rect)
+    screen.blit(Order_image, Order_rect)
+    if Order_active:
+        screen.blit(UI_Orders_image, UI_Orders_rect)
+        screen.blit(UI_Orders_slot_image, UI_Orders_slot_rect)
+        screen.blit(UI_Orders_slot_item_image, UI_Orders_slot_item_rect)
+        screen.blit(UI_Orders_button_image, UI_Orders_button_rect)
 
 
 #Garden
@@ -283,7 +293,7 @@ while running:
             if event.key == pygame.K_a:
                 left_move = True
             if event.key == pygame.K_i:
-                if Market_active == False and Inventoty_active == False:
+                if Market_active == False and Inventoty_active == False and Order_active == False:
                     Inventoty_active = True
                 else:
                     Inventoty_active = False
@@ -295,10 +305,14 @@ while running:
                         Axe_active = False
                 print(Axe_active, Axe_bay)
             if event.key == pygame.K_e:
-                if Market_active == False and Inventoty_active == False:
+                if Market_active == False and Inventoty_active == False and Order_active == False:
                     Market_active = True
                 else:
                     Market_active = False
+                if Order_active == False and Market_active == False and Inventoty_active == False and Player.colliderect(Order_rect):
+                    Order_active = True
+                else:
+                    Order_active = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and Player_rect.colliderect(Garden_rect) and grow == False and aple_count >= 1:
