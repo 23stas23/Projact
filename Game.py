@@ -75,9 +75,9 @@ coins_rect.y = 10
 #items
 items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": "", "cost": 100}}
 tools = {"axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 200}}
-UI_items = {"apple": {"id": 1, "name":"Apple", "image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), "cost": 100}}
+UI_items = {"apple": {"id": 1, "name":"Apple", "image": pygame.transform.scale(pygame.image.load("Image/Appel.png"), (70, 70)), "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": pygame.transform.scale(pygame.image.load("Image/Wood.png"), (70, 70)), "cost": 100}}
 
-#Item
+#Item Appel
 apel_in_screen = True
 aple_count = 0
 
@@ -85,6 +85,9 @@ Aple_image = pygame.transform.scale(pygame.image.load(items["apple"]["image"]), 
 Aple_rect = Aple_image.get_rect()
 Aple_rect.x = 500
 Aple_rect.y = 200
+
+#Item Wood
+wood_count = 0
 
 #tools
 Axe_active = False
@@ -117,13 +120,28 @@ UI_Inventory_slot_rect.x = UI_Inventory_rect.x + 20
 UI_Inventory_slot_rect.y = UI_Inventory_rect.y + 50
 
 #UI Inventory slot image
-UI_Inventory_slot_item_image = UI_item["apple"]["image"]
+UI_Inventory_slot_item_image = UI_items["apple"]["image"]
 UI_Inventory_slot_item_rect = UI_Inventory_slot_item_image.get_rect()
 UI_Inventory_slot_item_rect.x = UI_Inventory_slot_rect.x + 5
 UI_Inventory_slot_item_rect.y = UI_Inventory_slot_rect.y + 5
 
-#UI Inventory text name
+#UI Inventory text name 
 name_slot = font1.render(items["apple"]["name"], True, WHITE)
+
+#UI Inventory slot (1)
+UI_Inventory_slot_image1 = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (80, 80))
+UI_Inventory_slot_rect1 = UI_Inventory_slot_image1.get_rect()
+UI_Inventory_slot_rect1.x = UI_Inventory_rect.x + 20
+UI_Inventory_slot_rect1.y = UI_Inventory_rect.y + 150
+
+#UI Inventory slot image(1)
+UI_Inventory_slot_item_image1 = UI_items["wood"]["image"]
+UI_Inventory_slot_item_rect1 = UI_Inventory_slot_item_image1.get_rect()
+UI_Inventory_slot_item_rect1.x = UI_Inventory_slot_rect1.x + 5
+UI_Inventory_slot_item_rect1.y = UI_Inventory_slot_rect1.y + 5
+
+#UI Inventory text name(1)
+name_slot1 = font1.render(items["wood"]["name"], True, WHITE)
 
 #UI Inventory Level
 UI_LevelBarBackgraund_image = pygame.transform.scale(pygame.image.load("Image/UI_BacgraundLevel.png"), (200, 30))
@@ -135,23 +153,34 @@ UI_LevelBarBackgraund_rect.y = UI_Inventory_rect.y + 430
 Inventoty_active = False
 
 def InventaryActive():
-    global aple_count,Inventoty_active
+    global aple_count,Inventoty_active, text_count
     if Inventoty_active:
         screen.blit(UI_Inventory_image, UI_Inventory_rect)
+
         screen.blit(UI_Inventory_slot_image, UI_Inventory_slot_rect)
         screen.blit(UI_Inventory_slot_item_image, UI_Inventory_slot_item_rect)
+        screen.blit(name_slot, (UI_Inventory_slot_rect.x + 15, UI_Inventory_slot_rect.y + 75))
+
+        screen.blit(UI_Inventory_slot_image1, UI_Inventory_slot_rect1)
+        screen.blit(UI_Inventory_slot_item_image1, UI_Inventory_slot_item_rect1)
+        screen.blit(name_slot1, (UI_Inventory_slot_rect1.x + 15, UI_Inventory_slot_rect1.y + 75))
+
         screen.blit(UI_LevelBarBackgraund_image, UI_LevelBarBackgraund_rect)
+        screen.blit(UI_LevelBarBackgraund_image, UI_LevelBarBackgraund_rect)
+
         UI_level_bar_image = pygame.transform.scale(pygame.image.load("Image/UI_LevelBar.png"), (level_bar * 2, 30))
 
         UI_level_bar_rect = UI_level_bar_image.get_rect()
         UI_level_bar_rect.x = UI_LevelBarBackgraund_rect.x
         UI_level_bar_rect.y = UI_LevelBarBackgraund_rect.y
         screen.blit(UI_level_bar_image, UI_level_bar_rect)
-        screen.blit(name_slot, (UI_Inventory_slot_rect.x + 15, UI_Inventory_slot_rect.y + 75))
-        #UI Inventory count item
+        #UI Inventory count item (1)
         text_count = str(aple_count)
         count_slot = font1.render(text_count, True, WHITE)
         screen.blit(count_slot, (UI_Inventory_slot_rect.x + 65, UI_Inventory_slot_rect.y + 50))
+        text_count1 = str(wood_count)
+        count_slot1 = font1.render(text_count1, True, WHITE)
+        screen.blit(count_slot1, (UI_Inventory_slot_rect1.x + 65, UI_Inventory_slot_rect1.y + 50))
         #UI Inventory Level Player
         text_Level = font1.render(f"Lvl:{level}", True, WHITE)
         screen.blit(text_Level, (UI_level_bar_rect.x + 80, UI_level_bar_rect.y + 5))
@@ -181,7 +210,7 @@ UI_Market_button_rect.x = UI_Market_slot_rect.x
 UI_Market_button_rect.y = UI_Market_slot_rect.y + 75
 
 #Market Objact
-Market_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"),(100, 120))
+Market_image = pygame.transform.scale(pygame.image.load("Image/Market.png"),(150, 120))
 Market_rect = Market_image.get_rect()
 Market_rect.x = 200
 Market_rect.y = 10
@@ -189,7 +218,6 @@ Market_rect.y = 10
 #Market
 Market_active = False 
 def Market():
-    screen.blit(Market_image, Market_rect)
     if  Market_active:
         screen.blit(UI_Market_image, UI_Market_rect)
         screen.blit(UI_Market_slot_image, UI_Market_slot_rect)
@@ -200,64 +228,123 @@ def Market():
 #UI Orders
 UI_Orders_image = pygame.transform.scale(pygame.image.load("Image/UI_Inventory.png"), (720, 500))
 UI_Orders_rect = UI_Orders_image.get_rect()
-UI_Orders_rect.x = 500
-UI_Orders_rect.y = 400
+UI_Orders_rect.x = 100
+UI_Orders_rect.y = 100
 
 #UI Order slot
-UI_Orders_slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (50,50))
+UI_Orders_slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (80,80))
 UI_Orders_slot_rect = UI_Orders_image.get_rect()
-UI_Orders_slot_rect.x = UI_Orders_rect.x + 50
-UI_Orders_slot_rect.y = UI_Orders_rect.y + 100
+UI_Orders_slot_rect.x = UI_Orders_rect.x + 20
+UI_Orders_slot_rect.y = UI_Orders_rect.y + 50
 
 #UI Order slot item
-UI_Orders_slot_item_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (40,40))
+UI_Orders_slot_item_image = UI_items["apple"]["image"]
 UI_Orders_slot_item_rect = UI_Orders_slot_item_image.get_rect()
 UI_Orders_slot_item_rect.x = UI_Orders_slot_rect.x + 5
 UI_Orders_slot_item_rect.y = UI_Orders_slot_rect.y + 5
 
+#UI Order Backgraund text
+UI_backgraund_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (300,80))
+UI_backgraund_rect  = UI_backgraund_image.get_rect()
+UI_backgraund_rect.x = UI_Orders_slot_rect.x + 100
+UI_backgraund_rect.y = UI_Orders_slot_rect.y 
+
 #UI Orders button
 UI_Orders_button_image = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
 UI_Orders_button_rect = UI_Orders_button_image.get_rect()
-UI_Orders_button_rect.x = UI_Orders_slot_rect.x
-UI_Orders_button_rect.y = UI_Orders_slot_rect.y + 75
+UI_Orders_button_rect.x = UI_Orders_slot_rect.x + 150
+UI_Orders_button_rect.y = UI_Orders_slot_rect.y  
+
+#UI Order slot (1)
+UI_Orders_slot_image1 = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (80,80))
+UI_Orders_slot_rect1 = UI_Orders_image.get_rect()
+UI_Orders_slot_rect1.x = UI_Orders_rect.x + 20
+UI_Orders_slot_rect1.y = UI_Orders_rect.y + 150
+
+#UI Order slot item (1)
+UI_Orders_slot_item_image1 = UI_items["wood"]["image"]
+UI_Orders_slot_item_rect1 = UI_Orders_slot_item_image1.get_rect()
+UI_Orders_slot_item_rect1.x = UI_Orders_slot_rect1.x + 5
+UI_Orders_slot_item_rect1.y = UI_Orders_slot_rect1.y + 5
+
+#UI Order Backgraund text (1)
+UI_backgraund_image1 = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (300,80))
+UI_backgraund_rect1  = UI_backgraund_image1.get_rect()
+UI_backgraund_rect1.x = UI_Orders_slot_rect1.x + 100
+UI_backgraund_rect1.y = UI_Orders_slot_rect1.y 
+
+#UI Orders button (1)
+UI_Orders_button_image1 = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
+UI_Orders_button_rect1 = UI_Orders_button_image1.get_rect()
+UI_Orders_button_rect1.x = UI_Orders_slot_rect1.x + 150
+UI_Orders_button_rect1.y = UI_Orders_slot_rect1.y 
 
 #Order
 Order_active = False
 
 #Order Objact
-Order_image = pygame.transfor.scale(pygame.image.load("Image/UI_slot_inventory.png"),(100, 120))
+Order_image = pygame.transform.scale(pygame.image.load("Image/Border_order.png"),(110, 100))
 Order_rect = Order_image.get_rect()
 Order_rect.x = 10
 Order_rect.y = 10
 
-def Orders():
-    screen.blit(Order_image, Order_rect)
-    if Order_active:
-        screen.blit(UI_Orders_image, UI_Orders_rect)
-        screen.blit(UI_Orders_slot_image, UI_Orders_slot_rect)
-        screen.blit(UI_Orders_slot_item_image, UI_Orders_slot_item_rect)
-        screen.blit(UI_Orders_button_image, UI_Orders_button_rect)
-
 #Order Progres
 Order_complect = False
+Order_complect1 = False
 
-list_orders = {"0":{"image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "pay": 20, "count_need": 15},"1":{"image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "pay": 60, "count_need": 50}}
+list_orders = {"0":{"image": pygame.transform.scale(pygame.image.load("Image/Appel.png"), (70, 70)), "pay": 20, "count_need": 15},"1":{"image": pygame.transform.scale(pygame.image.load("Image/Appel.png"), (70, 70)), "pay": 60, "count_need": 50},
+               "2":{"image": pygame.transform.scale(pygame.image.load("Image/Wood.png"), (70, 70)), "pay": 50, "count_need": 20},"3":{"image": pygame.transform.scale(pygame.image.load("Image/Wood.png"), (70, 70)), "pay": 100, "count_need": 60}}
 
 #Chenge Orders
 num_items_list = 0
 count_items_need = 0
-timer_order = 0.0
+num_items_list1 = 0
+count_items_need1 = 0
 def Change_Order():
-    global num_items_list, UI_Orders_slot_item_image, timer_order
-    timer_order = 1/FPS/60
-    timer_order = round(timer_order, 2)
-    print(timer_order)
+    global num_items_list, UI_Orders_slot_item_image, count_items_need, Order_complect, UI_Order_text
     if Order_complect == False:
-        timer_order = 0.0
-        if timer_order == 2.0
-        num_item_list = randint(0, 1)
-        UI_Orders_slot_item_image =  list_orders[f"num_items_list"]["image"]
-        count_items_need = list_orders[f"num_items_list"]["count_need"]
+        num_items_list = randint(0, 1)
+        UI_Orders_slot_item_image =  list_orders[f"{num_items_list}"]["image"]
+        count_items_need = list_orders[f"{num_items_list}"]["count_need"]
+        #UI Order text
+        font = pygame.font.Font(None, 28)
+        pay = list_orders[f"{num_items_list}"]["pay"]
+        text_order = f"Собери {count_items_need}: Награда {pay}"
+        UI_Order_text = font.render(text_order, True, WHITE)
+        Order_complect = True
+    
+
+def Change_Order1():
+    global num_items_list1, UI_Orders_slot_item_image1, count_items_need1, Order_complect1, UI_Order_text1
+    if Order_complect1 == False:
+        num_items_list1 = randint(2, 3)
+        UI_Orders_slot_item_image1 =  list_orders[f"{num_items_list1}"]["image"]
+        count_items_need1 = list_orders[f"{num_items_list1}"]["count_need"]
+        #UI Order text
+        font = pygame.font.Font(None, 28)
+        pay = list_orders[f"{num_items_list1}"]["pay"]
+        text_order1 = f"Собери {count_items_need}: Награда {pay}"
+        UI_Order_text1 = font.render(text_order1, True, WHITE)
+        Order_complect1 = True
+     
+
+def Orders():
+    if Order_active:
+        #Order Appel 
+        screen.blit(UI_Orders_image, UI_Orders_rect)
+        screen.blit(UI_Orders_slot_image, UI_Orders_slot_rect)
+        screen.blit(UI_Orders_slot_item_image, UI_Orders_slot_item_rect)
+        screen.blit(UI_Orders_button_image, UI_Orders_button_rect)
+        screen.blit(UI_backgraund_image, UI_backgraund_rect)
+        screen.blit(UI_Order_text, (UI_backgraund_rect.x + 5, UI_backgraund_rect.y + 5))
+        #Order  Wood
+        screen.blit(UI_Orders_slot_image1, UI_Orders_slot_rect1)
+        screen.blit(UI_Orders_slot_item_image1, UI_Orders_slot_item_rect1)
+        screen.blit(UI_Orders_button_image1, UI_Orders_button_rect1)
+        screen.blit(UI_backgraund_image1, UI_backgraund_rect1)
+        screen.blit(UI_Order_text1, (UI_backgraund_rect1.x + 5, UI_backgraund_rect1.y + 5))
+        
+
         
         
         
@@ -337,14 +424,24 @@ while running:
                         Axe_active = False
                 print(Axe_active, Axe_bay)
             if event.key == pygame.K_e:
-                if Market_active == False and Inventoty_active == False and Order_active == False and Player.colliderect(Market_rect):
+                if Market_active == False and Inventoty_active == False and Order_active == False and Player_rect.colliderect(Market_rect):
                     Market_active = True
                 else:
                     Market_active = False
-                if Order_active == False and Market_active == False and Inventoty_active == False and Player.colliderect(Order_rect):
+                if Order_active == False and Market_active == False and Inventoty_active == False and Player_rect.colliderect(Order_rect):
                     Order_active = True
                 else:
                     Order_active = False
+            
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                up_move = False
+            if event.key == pygame.K_s:
+                down_move = False
+            if event.key == pygame.K_d:
+                right_move = False
+            if event.key == pygame.K_a:
+                left_move = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and Player_rect.colliderect(Garden_rect) and grow == False and aple_count >= 1:
@@ -356,24 +453,17 @@ while running:
                 xp_level += add_xp_level
                 level_bar = xp_level/max_level
                 aple_count += randint(10, 20)
+                wood_count += 5
                 grow = False
-            if event.button == 1 and UI_Orders_button_rect.collidepoint(event.pos) and Order_complect:
-                Order_complect = False
             
             if event.button == 1 and UI_Market_button_rect.collidepoint(event.pos) and coins >= 50:
                 if Axe_bay == False:
                     coins -= 50
                     Axe_bay = True
-            
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                up_move = False
-            if event.key == pygame.K_s:
-                down_move = False
-            if event.key == pygame.K_d:
-                right_move = False
-            if event.key == pygame.K_a:
-                left_move = False
+            if event.button == 1 and UI_Orders_button_rect.collidepoint(event.pos) and Order_complect and aple_count >= list_orders[f"{num_items_list}"]["count_need"]:
+                Order_complect = False
+            if event.button == 1 and UI_Orders_button_rect1.collidepoint(event.pos) and Order_complect1 and wood_count >= list_orders[f"{num_items_list1}"]["count_need"]:
+                Order_complect = False
 
     screen.fill(BLACK)
     #check LevelBar full
@@ -387,6 +477,9 @@ while running:
     if apel_in_screen:
         screen.blit(Aple_image, Aple_rect)
     garden()
+    screen.blit(Order_image, Order_rect)
+    screen.blit(Market_image, Market_rect)
+
     screen.blit(Player_image, Player_rect)
     if Axe_active:
         screen.blit(Axe_image, Axe_rect)
@@ -398,6 +491,9 @@ while running:
     
     Market()
     InventaryActive()
+    Orders()
+    Change_Order()
+    Change_Order1()
 
     pygame.display.flip()
     pygame.time.Clock().tick(60)
