@@ -74,7 +74,7 @@ coins_rect.y = 10
 
 #items
 items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": "", "cost": 100}}
-tools = {"axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 200}}
+tools = {"axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 50}}
 UI_items = {"apple": {"id": 1, "name":"Apple", "image": pygame.transform.scale(pygame.image.load("Image/Appel.png"), (70, 70)), "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": pygame.transform.scale(pygame.image.load("Image/Wood.png"), (70, 70)), "cost": 100}}
 
 #Item Appel
@@ -157,30 +157,35 @@ def InventaryActive():
     if Inventoty_active:
         screen.blit(UI_Inventory_image, UI_Inventory_rect)
 
+        #Render Slot inventory N0
         screen.blit(UI_Inventory_slot_image, UI_Inventory_slot_rect)
         screen.blit(UI_Inventory_slot_item_image, UI_Inventory_slot_item_rect)
         screen.blit(name_slot, (UI_Inventory_slot_rect.x + 15, UI_Inventory_slot_rect.y + 75))
+        
+        #UI Inventory count apple ()
+        text_count = str(aple_count)
+        count_slot = font1.render(text_count, True, WHITE)
+        screen.blit(count_slot, (UI_Inventory_slot_rect.x + 65, UI_Inventory_slot_rect.y + 50))
 
+        #Render Slot inventory N1 
         screen.blit(UI_Inventory_slot_image1, UI_Inventory_slot_rect1)
         screen.blit(UI_Inventory_slot_item_image1, UI_Inventory_slot_item_rect1)
         screen.blit(name_slot1, (UI_Inventory_slot_rect1.x + 15, UI_Inventory_slot_rect1.y + 75))
+        
+        #UI Inventory count wood
+        text_count1 = str(wood_count)
+        count_slot1 = font1.render(text_count1, True, WHITE)
+        screen.blit(count_slot1, (UI_Inventory_slot_rect1.x + 65, UI_Inventory_slot_rect1.y + 50))
 
         screen.blit(UI_LevelBarBackgraund_image, UI_LevelBarBackgraund_rect)
         screen.blit(UI_LevelBarBackgraund_image, UI_LevelBarBackgraund_rect)
 
         UI_level_bar_image = pygame.transform.scale(pygame.image.load("Image/UI_LevelBar.png"), (level_bar * 2, 30))
-
         UI_level_bar_rect = UI_level_bar_image.get_rect()
         UI_level_bar_rect.x = UI_LevelBarBackgraund_rect.x
         UI_level_bar_rect.y = UI_LevelBarBackgraund_rect.y
         screen.blit(UI_level_bar_image, UI_level_bar_rect)
-        #UI Inventory count item (1)
-        text_count = str(aple_count)
-        count_slot = font1.render(text_count, True, WHITE)
-        screen.blit(count_slot, (UI_Inventory_slot_rect.x + 65, UI_Inventory_slot_rect.y + 50))
-        text_count1 = str(wood_count)
-        count_slot1 = font1.render(text_count1, True, WHITE)
-        screen.blit(count_slot1, (UI_Inventory_slot_rect1.x + 65, UI_Inventory_slot_rect1.y + 50))
+        
         #UI Inventory Level Player
         text_Level = font1.render(f"Lvl:{level}", True, WHITE)
         screen.blit(text_Level, (UI_level_bar_rect.x + 80, UI_level_bar_rect.y + 5))
@@ -203,11 +208,32 @@ UI_Market_slot_item_rect = UI_Market_slot_item_image.get_rect()
 UI_Market_slot_item_rect.x = UI_Market_slot_rect.x + 5
 UI_Market_slot_item_rect.y = UI_Market_slot_rect.y + 5
 
+#UI Market text cost
+cost_item = font1.render(items["apple"][cost])
+
 #UI Market button
 UI_Market_button_image = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
 UI_Market_button_rect = UI_Market_button_image.get_rect()
 UI_Market_button_rect.x = UI_Market_slot_rect.x
 UI_Market_button_rect.y = UI_Market_slot_rect.y + 75
+
+#UI Market slot (1)
+UI_Market_slot_image1 = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (70,70))
+UI_Market_slot_rect1 = UI_Market_slot_image1.get_rect()
+UI_Market_slot_rect1.x = UI_Market_rect.x + 20
+UI_Market_slot_rect1.y = UI_Market_rect.y + 120
+
+#UI Market slot item (1)
+UI_Market_slot_item_image1 = pygame.transform.scale(pygame.image.load("Image/Axe.png"), (50,50))
+UI_Market_slot_item_rect1 = UI_Market_slot_item_image1.get_rect()
+UI_Market_slot_item_rect1.x = UI_Market_slot_rect1.x + 5
+UI_Market_slot_item_rect1.y = UI_Market_slot_rect1.y + 5
+
+#UI Market button (1)
+UI_Market_button_image1 = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
+UI_Market_button_rect1 = UI_Market_button_image1.get_rect()
+UI_Market_button_rect1.x = UI_Market_slot_rect1.x
+UI_Market_button_rect1.y = UI_Market_slot_rect1.y + 75
 
 #Market Objact
 Market_image = pygame.transform.scale(pygame.image.load("Image/Market.png"),(150, 120))
@@ -219,10 +245,20 @@ Market_rect.y = 10
 Market_active = False 
 def Market():
     if  Market_active:
+        
+        ##UI Market slot Axe
         screen.blit(UI_Market_image, UI_Market_rect)
         screen.blit(UI_Market_slot_image, UI_Market_slot_rect)
-        screen.blit(UI_Market_button_image, UI_Market_button_rect)
-        screen.blit(UI_Market_slot_item_image, UI_Market_slot_item_rect)
+
+        #UI Market cost Axe
+        text_count1 = str(tools["axe"]["cost"])
+        count_slot1 = font1.render(text_count1, True, WHITE)
+        screen.blit(count_slot1, (UI_Inventory_slot_rect1.x + 65, UI_Inventory_slot_rect1.y + 50))
+        
+        #UI Market slot Apple
+        screen.blit(UI_Market_button_image1, UI_Market_button_rect1)
+        screen.blit(UI_Market_slot_item_image1, UI_Market_slot_item_rect1)
+        
 
 
 #UI Orders
@@ -337,6 +373,7 @@ def Orders():
         screen.blit(UI_Orders_button_image, UI_Orders_button_rect)
         screen.blit(UI_backgraund_image, UI_backgraund_rect)
         screen.blit(UI_Order_text, (UI_backgraund_rect.x + 5, UI_backgraund_rect.y + 5))
+        
         #Order  Wood
         screen.blit(UI_Orders_slot_image1, UI_Orders_slot_rect1)
         screen.blit(UI_Orders_slot_item_image1, UI_Orders_slot_item_rect1)
