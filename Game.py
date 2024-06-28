@@ -89,7 +89,8 @@ Aple_rect.y = 200
 #Item Wood
 wood_count = 0
 
-#tools
+
+#tools Axe
 Axe_active = False
 Axe_bay = False
 
@@ -208,14 +209,14 @@ UI_Market_slot_item_rect = UI_Market_slot_item_image.get_rect()
 UI_Market_slot_item_rect.x = UI_Market_slot_rect.x + 5
 UI_Market_slot_item_rect.y = UI_Market_slot_rect.y + 5
 
-#UI Market text cost
-cost_item = font1.render(items["apple"][cost])
-
 #UI Market button
 UI_Market_button_image = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
 UI_Market_button_rect = UI_Market_button_image.get_rect()
 UI_Market_button_rect.x = UI_Market_slot_rect.x
 UI_Market_button_rect.y = UI_Market_slot_rect.y + 75
+
+#UI Market text cost Axe
+cost_item = font1.render(tools["axe"]["cost"])
 
 #UI Market slot (1)
 UI_Market_slot_image1 = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (70,70))
@@ -235,6 +236,30 @@ UI_Market_button_rect1 = UI_Market_button_image1.get_rect()
 UI_Market_button_rect1.x = UI_Market_slot_rect1.x
 UI_Market_button_rect1.y = UI_Market_slot_rect1.y + 75
 
+#UI Market text cost (1)
+cost_item1 = font1.render(items["apple"]["cost"])
+
+#UI Market slot (2)
+UI_Market_slot_image2 = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (70,70))
+UI_Market_slot_rect2 = UI_Market_slot_image2.get_rect()
+UI_Market_slot_rect2.x = UI_Market_rect.x + 20
+UI_Market_slot_rect2.y = UI_Market_rect.y + 200
+
+#UI Market slot item (2)
+UI_Market_slot_item_image2 = pygame.transform.scale(pygame.image.load("Image/Axe.png"), (50,50))
+UI_Market_slot_item_rect2 = UI_Market_slot_item_image2.get_rect()
+UI_Market_slot_item_rect2.x = UI_Market_slot_rect2.x + 5
+UI_Market_slot_item_rect2.y = UI_Market_slot_rect2.y + 5
+
+#UI Market button (2)
+UI_Market_button_image2 = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
+UI_Market_button_rect2 = UI_Market_button_image2.get_rect()
+UI_Market_button_rect2.x = UI_Market_slot_rect2.x
+UI_Market_button_rect2.y = UI_Market_slot_rect2.y + 75
+
+#UI Market text cost (2)
+cost_item2 = font1.render(items["wood"]["cost"])
+
 #Market Objact
 Market_image = pygame.transform.scale(pygame.image.load("Image/Market.png"),(150, 120))
 Market_rect = Market_image.get_rect()
@@ -251,13 +276,22 @@ def Market():
         screen.blit(UI_Market_slot_image, UI_Market_slot_rect)
 
         #UI Market cost Axe
-        text_count1 = str(tools["axe"]["cost"])
-        count_slot1 = font1.render(text_count1, True, WHITE)
-        screen.blit(count_slot1, (UI_Inventory_slot_rect1.x + 65, UI_Inventory_slot_rect1.y + 50))
+        screen.blit(cost_item, (UI_Market_slot_rect.x + 65, UI_Market_slot_rect.y + 50))
         
         #UI Market slot Apple
         screen.blit(UI_Market_button_image1, UI_Market_button_rect1)
         screen.blit(UI_Market_slot_item_image1, UI_Market_slot_item_rect1)
+
+        #UI Market cost Aplle
+        screen.blit(cost_item1, (UI_Market_slot_rect1.x + 65, UI_Market_slot_rect1.y + 50))
+
+        #UI Market slot Wood
+        screen.blit(UI_Market_button_image2, UI_Market_button_rect2)
+        screen.blit(UI_Market_slot_item_image2, UI_Market_slot_item_rect2)
+
+        #UI Market cost Wood
+        screen.blit(cost_item2, (UI_Market_slot_rect2.x + 65, UI_Market_slot_rect2.y + 50))
+
         
 
 
@@ -493,10 +527,17 @@ while running:
                 wood_count += 5
                 grow = False
             
-            if event.button == 1 and UI_Market_button_rect.collidepoint(event.pos) and coins >= 50:
+            if event.button == 1 and UI_Market_button_rect.collidepoint(event.pos) and coins str(tools["axe"]["cost"]):
                 if Axe_bay == False:
-                    coins -= 50
+                    coins -= str(tools["axe"]["cost"])
                     Axe_bay = True
+                    
+            if event.button == 1 and UI_Market_button_rect1.collidepoint(event.pos) and coins >= str(items["apple"]["cost"]):
+                coins -= str(items["apple"]["cost"])
+                aple_count += 1
+                
+                
+                    
             if event.button == 1 and UI_Orders_button_rect.collidepoint(event.pos) and Order_complect and aple_count >= list_orders[f"{num_items_list}"]["count_need"]:
                 Order_complect = False
             if event.button == 1 and UI_Orders_button_rect1.collidepoint(event.pos) and Order_complect1 and wood_count >= list_orders[f"{num_items_list1}"]["count_need"]:
