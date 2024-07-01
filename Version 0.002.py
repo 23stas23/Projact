@@ -21,3 +21,15 @@ GREEN = (0, 255, 17)
 FPS = 60
 font = pygame.font.SysFont("Arial", 32)
 font1 =pygame.font.SysFont("Arial", 22)
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
+
+pygame.quit()
+sys.exit()
