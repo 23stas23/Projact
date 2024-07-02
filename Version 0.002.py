@@ -76,17 +76,17 @@ class UI_Inventory_slot(pygame.sprite.Sprite):
         self.active = actives
         self.font = font
         self.item = item
-
+        #slot inventory
         self.slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (80, 80))
         self.slot_rect = self.slot_image.get_rect()
         self.slot_rect.x = UI_Inventory_rect.x + x
         self.slot_rect.y = UI_Inventory_rect.y + y
-
+        #item inventory
         self.item_image = pygame.transform.scale(pygame.image.load(str(items[item]["image"])), (70, 70))
         self.item_rect = self.item_image.get_rect()
         self.item_rect.x = self.slot_rect.x + 5
         self.item_rect.y = self.slot_rect.y + 5
-
+        #item name inventory
         self.name_item = self.font.render(str(items[self.item]["name"]), True, WHITE)
 
     def update(self):
@@ -94,7 +94,7 @@ class UI_Inventory_slot(pygame.sprite.Sprite):
             screen.blit(self.slot_image, self.slot_rect)
             screen.blit(self.item_image, self.item_rect)
             screen.blit(self.name_item, (self.slot_rect.x + 15, self.slot_rect.y + 75))
-            
+            #item count inventory
             self.count_item = self.font.render(str(items[self.item]["count"]), True, WHITE)
             screen.blit(self.count_item, (self.slot_rect.x + 65, self.slot_rect.y + 50))
             
@@ -121,28 +121,28 @@ class UI_Market_slot(pygame.sprite.Sprite):
         self.font = font
         self.item = item
         
-        self.slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (70,70))
+        self.slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (80,80))
         self.slot_rect = self.slot_image.get_rect()
         self.slot_rect.x = UI_Market_rect.x + x
         self.slot_rect.y = UI_Market_rect.y + y
 
-        self.item_image = pygame.transform.scale(pygame.image.load("Image/Axe.png"), (50,50))
+        self.item_image = pygame.transform.scale(pygame.image.load(str(items[self.item]["image"])), (70,70))
         self.item_rect = self.item_image.get_rect()
         self.item_rect.x = self.slot_rect.x + 5
         self.item_rect.y = self.slot_rect.y + 5
 
-        self.button_image = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
+        self.button_image = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (80, 20))
         self.button_rect = self.button_image.get_rect()
         self.button_rect.x = self.slot_rect.x
         self.button_rect.y = self.slot_rect.y + 75
 
         self.cost_item_text = font1.render(str(items[self.item]["cost"]), True, WHITE)
-    def update():
+    def update(self):
         if Market_active:
-            screen.blit(self.slot_image, self.slot.rect)
+            screen.blit(self.slot_image, self.slot_rect)
             screen.blit(self.item_image, self.item_rect)
             screen.blit(self.button_image, self.button_rect)
-            screen.blit(self.cost_item_text, (self.slot_rect2.x + 55, self.slot_rect.y + 50))
+            screen.blit(self.cost_item_text, (self.slot_rect.x + 55, self.slot_rect.y + 50))
 
 #number slots
 market_slot = UI_Market_slot(20, 20, "axe", Market_active, font1)
