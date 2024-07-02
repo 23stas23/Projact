@@ -30,10 +30,8 @@ def bacgraund():
     screen.blit(bacgraund_image, bacgraund_rect)
 
 #items
-items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100}}
+items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50, "count": 0}, "wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100, "count": 0}}
 tools = {"axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 50}}
-UI_items = {"apple": {"id": 1, "name":"Apple", "image": "Image/Appel.png", "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100}}
-
 
 #Player
 up_move = False
@@ -71,10 +69,13 @@ UI_Inventory_rect = UI_Inventory_image.get_rect()
 UI_Inventory_rect.x = 100
 UI_Inventory_rect.y = 100
 
+#Inventory slot
 class UI_Inventory_slot(pygame.sprite.Sprite):
-    def __init__(self, x, y, item, actives):
+    def __init__(self, x, y, item, actives, font):
         self.active = actives
+        self.font = font
 
+        #UI_inventory_slot
         self.slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (80, 80))
         self.slot_rect = self.slot_image.get_rect()
         self.slot_rect.x = UI_Inventory_rect.x + x
@@ -85,20 +86,49 @@ class UI_Inventory_slot(pygame.sprite.Sprite):
         self.item_rect.x = self.slot_rect.x + 5
         self.item_rect.y = self.slot_rect.y + 5
 
-        #self.item_name_text = str(items[item]["name"])
-        #self.item_name_rect = self.item_name_text.get_rect()
-        #self.item_name_rect.x = self.slot_rect.x
-        #self.item_name_rect.y = self.slot_rect.y - 20
+        self.name_item = self.font.render(str(items[item]["name"]), True, WHITE)
+
+        self.count_item = self.font.render(str(items[item]["count"]), True, WHITE)
 
     def update(self):
         if InventoryActive:
             screen.blit(self.slot_image, self.slot_rect)
             screen.blit(self.item_image, self.item_rect)
+            screen.blit(self.name_item, (self.slot_rect.x + 15, self.slot_rect.y + 75))
+            screen.blit(self.count_item, (self.slot_rect.x + 65, self.slot_rect.y + 50))
+#Count Inventory slot
+slot = UI_Inventory_slot(10, 10, "apple", InventoryActive, font1)
+slot1 = UI_Inventory_slot(100, 10, "wood", InventoryActive, font1)
 
-slot = UI_Inventory_slot(10, 10, "apple", InventoryActive)
-slot1 = UI_Inventory_slot(100, 10, "wood", InventoryActive)
+Inventory_slots.add(slot, slot1)
 
-        
+#Market
+Market_active = False
+
+
+class UI_Market_slot(pygame.sprite.Sprite):
+    def __init__(self, x, y, item, active, font):
+        #UI Market slot
+        UI_Market_slot_image = pygame.transform.scale(pygame.image.load("Image/UI_slot_inventory.png"), (70,70))
+        UI_Market_slot_rect = UI_Market_slot_image.get_rect()
+        UI_Market_slot_rect.x = UI_Market_rect.x + 20
+        UI_Market_slot_rect.y = UI_Market_rect.y + 20
+
+        #UI Market slot item
+        UI_Market_slot_item_image = pygame.transform.scale(pygame.image.load("Image/Axe.png"), (50,50))
+        UI_Market_slot_item_rect = UI_Market_slot_item_image.get_rect()
+        UI_Market_slot_item_rect.x = UI_Market_slot_rect.x + 5
+        UI_Market_slot_item_rect.y = UI_Market_slot_rect.y + 5
+
+        #UI Market button
+        UI_Market_button_image = pygame.transform.scale(pygame.image.load("Image/UI_button_Market.png"), (70, 20))
+        UI_Market_button_rect = UI_Market_button_image.get_rect()
+        UI_Market_button_rect.x = UI_Market_slot_rect.x
+        UI_Market_button_rect.y = UI_Market_slot_rect.y + 75
+
+        #UI Market text cost Axe
+        cost_Axe = str(tools["axe"]["cost"])
+        cost_item = font1.render(cost_Axe, True, WHITE)
 running = True
 while running:
     for event in pygame.event.get():
@@ -108,11 +138,12 @@ while running:
             if event.key == pygame.K_e and InventoryActive == False:
                 InventoryActive = True
             else:
-                InventoryActive = True
-
-    player.update()
+                InventoryActive = False
     screen.fill(BLACK)
+    bacgraund()
+    #Player render
     screen.blit(player.image, player.rect)
+    player.update()
     #UI Inventory render
     if InventoryActive:
         screen.blit(UI_Inventory_image, UI_Inventory_rect)
