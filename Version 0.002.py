@@ -179,7 +179,7 @@ while running:
     #UI Market render
     if Market_active:
         screen.blit(UI_Market_image, UI_Market_rect)
-    market_slot.update()
+    Market_slots.update()
     
 
     pygame.display.flip()
