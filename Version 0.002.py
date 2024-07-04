@@ -7,7 +7,7 @@ pygame.init()
 
 # Настройка окна
 WIDTH = 1000
-HEIGHT = 980
+HEIGHT = 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Farm")
 clock = pygame.time.Clock()
@@ -29,6 +29,9 @@ def bacgraund():
     bacgraund_rect.y = 0
     screen.blit(bacgraund_image, bacgraund_rect)
 
+#List sprites
+all_sprites = pygame.sprite.Group()
+
 #items
 items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50, "count": 0}, "wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100, "count": 0}, "axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 50}}
 
@@ -42,6 +45,7 @@ speed_player = 5
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        #player
         self.image = pygame.Surface((60, 70))
         self.image = pygame.transform.scale(pygame.image.load("Image/Player.png"), (60, 70))
         self.rect = self.image.get_rect()
@@ -58,10 +62,46 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_s]:
             self.rect.y += speed_player
 player = Player()
+all_sprites.add(player)
+#Level
+num_level = 0
+bar_level = 0.0
+
+class Bar(pygame.sprite.Sprite):
+    def __init__(self, x, y, font, text, text_num, level):
+        super().__init__()
+        #Background Bar
+        self.backgroundBar_image = pygame.transform.scale(pygame.image.load("Image/UI_BacgraundLevel.png"), (150, 30))
+        self.backgroundBar_rect = self.backgroundBar_image.get_rect()
+        self.backgroundBar_rect.x = x
+        self.backgroundBar_rect.y = y
+        #Bar
+        self.bur = 90
+        self.size = 140*level
+        self.Bur_image = pygame.transform.scale(pygame.image.load("Image/UI_LevelBar.png"), (self.size, 28))
+        self.Bur_rect = self.Bur_image.get_rect()
+        self.Bur_rect.x = self.backgroundBar_rect.x + 2.5
+        self.Bur_rect.y = self.backgroundBar_rect.y + 2.5
+        #Text Bar
+        self.Bur_text = font.render(f"{text} {text_num}", True, WHITE)
+    def update(self):
+        screen.blit(self.backgroundBar_image, self.backgroundBar_rect)
+        screen.blit(self.Bur_image, self.Bur_rect)
+        screen.blit(self.Bur_text, (155, 15))
+Level_bars = Bar(10, 10, font1, "Lvl:", num_level, bar_level)
+all_sprites.add(Level_bars)
+        
+class Coins(pygame.sprite.Sprite):
+    def __init__(self, x, y, font):
+        #Coins
+        self.coins_image = pygame.transform.scale(pygame.image.load("Image/Coins.png"), (40, 40))
+        self.coins_rect = self.coins_image.get_rect()
+        self.coin_rect.x = 10
+        self.coin_rect.y = 40
+        
 
 #UI Inventory
 InventoryActive = False
-Inventory_slots = pygame.sprite.Group()
 
 UI_Inventory_image = pygame.transform.scale(pygame.image.load("Image/UI_Inventory.png"), (750, 500))
 UI_Inventory_rect = UI_Inventory_image.get_rect()
@@ -102,11 +142,10 @@ class UI_Inventory_slot(pygame.sprite.Sprite):
 slot = UI_Inventory_slot(10, 10, "apple", InventoryActive, font1)
 slot1 = UI_Inventory_slot(100, 10, "wood", InventoryActive, font1)
 
-Inventory_slots.add(slot, slot1)
+all_sprites.add(slot, slot1)
 
 #Market
 Market_active = False
-Market_slots =  pygame.sprite.Group()
 
 #UI Market 
 UI_Market_image = pygame.transform.scale(pygame.image.load("Image/UI_inventory.png"), (750, 500))
@@ -148,7 +187,7 @@ class UI_Market_slot(pygame.sprite.Sprite):
 market_slot = UI_Market_slot(20, 20, "axe", Market_active, font1)
 market_slot1 = UI_Market_slot(120, 20, "apple", Market_active, font1)
 
-Market_slots.add(market_slot, market_slot1)
+all_sprites.add(market_slot, market_slot1)
 
         
 running = True
@@ -167,21 +206,20 @@ while running:
                 Market_active = False
 
     screen.fill(BLACK)
-    bacgraund()
+    #bacgraund()
     #Player render
     screen.blit(player.image, player.rect)
     player.update()
     #UI Inventory render
     if InventoryActive:
         screen.blit(UI_Inventory_image, UI_Inventory_rect)
-    Inventory_slots.update()
-
     #UI Market render
     if Market_active:
         screen.blit(UI_Market_image, UI_Market_rect)
-    Market_slots.update()
-    
+    #UI all_sprits
+    all_sprites.update()
 
+    
     pygame.display.flip()
     pygame.time.Clock().tick(60)
 
