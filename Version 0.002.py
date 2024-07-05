@@ -52,20 +52,81 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (100, 100)
         
     def update(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
-            self.rect.x -= speed_player
-        if keys[pygame.K_d]:
-            self.rect.x += speed_player
-        if keys[pygame.K_w]:
-            self.rect.y -= speed_player
-        if keys[pygame.K_s]:
-            self.rect.y += speed_player
+        screen.blit(self.image, self.rect)
+    def event_button(self, event):
+         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                self.rect.x -= speed_player
+            if event.key == pygame.K_d:
+                self.rect.x += speed_player
+            if event.key == pygame.K_w:
+                self.rect.y -= speed_player
+            if event.key == pygame.K_s:
+                self.rect.y += speed_player
 player = Player()
 all_sprites.add(player)
+
+#garden
+garden_active = False
+grow = False
+timer = 0
+class Garden(pygame.sprite.Sprite):
+    def __init__(self, x, y, gardenActive):
+        super().__init__()
+        self.active = gardenActive
+        
+        self.image = pygame.transform.scale(pygame.image.load("Image/garden.png"), (60, 60))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        self.sead_image =pygame.transform.scale(pygame.image.load("Image/sead.png"), (50, 50))
+        self.sead_rect = self.sead_image.get_rect()
+        self.sead_rect.x = self.rect.x + 5
+        self.rect.y = self.rect.y + 5
+
+        self.StartTree_image = pygame.transform.scale(pygame.image.load("Image/Start_tree.png"),(40, 90))
+        self.StartTree_rect = self.StartTree_image.get_rect()
+        self.StartTree_rect.x = self.rect.x + 5
+        self.StartTree_rect.y = self.rect.y - 30
+
+        self.FinishTree_image = pygame.transform.scale(pygame.image.load("Image/FinishTree.png"), (60, 95))
+        self.FinishTree_rect = self.FinishTree_image.get_rect()
+        self.FinishTree_rect.x = self.rect.x + 5
+        self.FinishTree_rect.y = self.rect.y - 40
+
+        self.ApelTree_image = pygame.transform.scale(pygame.image.load("Image/TreewithApel.png"), (60, 95))
+        self.ApelTree_rect = self.ApelTree_image.get_rect()
+        self.ApelTree_rect.x = self.rect.x + 5
+        self.ApelTree_rect.y = self.rect.y - 40
+    def update(self):
+        screen.blit(self.image, self.rect)
+        if grow and self.active:
+            if timer >=0 and timer <= 5:
+                screen.blit(self.sead_image, self.sead_rect)
+            if timer >= 5 and timer <= 10:
+                screen.blit(self.StartTree_image, self.StartTree_rect)
+
+            if timer >= 10 and timer <= 15:
+                screen.blit(self.FinishTree_image, self.FinishTree_rect)
+            if timer >= 15:
+                screen.blit(self.ApelTree_image, self.ApelTree_rect)
+    def event_button(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e and player.rect.colliderect(self.rect) and grow == False and self.active:
+                grow = True
+                timer = 0
+            if event.key == pygame.K_e and player.rect.colliderect(self.rect) and grow and self.active == False:
+                grow = False
+                
+#Gardens
+garden = Garden(100, 500, True)
+all_sprites.add(garden)
+
+
 #Level
 num_level = 0
-bar_level = 0.0
+bar_level = 0.5
 
 class Bar(pygame.sprite.Sprite):
     def __init__(self, x, y, font, text, text_num, level):
@@ -88,6 +149,8 @@ class Bar(pygame.sprite.Sprite):
         screen.blit(self.backgroundBar_image, self.backgroundBar_rect)
         screen.blit(self.Bur_image, self.Bur_rect)
         screen.blit(self.Bur_text, (155, 15))
+    def event_button(self, event):
+        pass
 Level_bars = Bar(10, 10, font1, "Lvl:", num_level, bar_level)
 all_sprites.add(Level_bars)
         
@@ -98,6 +161,8 @@ class Coins(pygame.sprite.Sprite):
         self.coins_rect = self.coins_image.get_rect()
         self.coin_rect.x = 10
         self.coin_rect.y = 40
+    def event_button(self, event):
+        pass
         
 
 #UI Inventory
@@ -137,6 +202,12 @@ class UI_Inventory_slot(pygame.sprite.Sprite):
             #item count inventory
             self.count_item = self.font.render(str(items[self.item]["count"]), True, WHITE)
             screen.blit(self.count_item, (self.slot_rect.x + 65, self.slot_rect.y + 50))
+    def event_button(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_i and InventoryActive == False and Market_active == False:
+                InventoryActive = True
+            else:
+                InventoryActive = False
             
 #number slots
 slot = UI_Inventory_slot(10, 10, "apple", InventoryActive, font1)
@@ -182,6 +253,13 @@ class UI_Market_slot(pygame.sprite.Sprite):
             screen.blit(self.item_image, self.item_rect)
             screen.blit(self.button_image, self.button_rect)
             screen.blit(self.cost_item_text, (self.slot_rect.x + 55, self.slot_rect.y + 50))
+    def event_button(self, event):
+        if event.type == pygame.KEYDOWN:
+            #Market Open
+            if event.key == pygame.K_m and InventoryActive == False and Market_active == False:
+                Market_active = True
+            else:
+                Market_active = False
 
 #number slots
 market_slot = UI_Market_slot(20, 20, "axe", Market_active, font1)
@@ -195,18 +273,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e and InventoryActive == False and Market_active == False:
-                InventoryActive = True
-            else:
-                InventoryActive = False
-            if event.key == pygame.K_m and InventoryActive == False and Market_active == False:
-                Market_active = True
-            else:
-                Market_active = False
+        all_sprites.event_button()
 
     screen.fill(BLACK)
-    #bacgraund()
+    bacgraund()
     #Player render
     screen.blit(player.image, player.rect)
     player.update()
@@ -218,6 +288,8 @@ while running:
         screen.blit(UI_Market_image, UI_Market_rect)
     #UI all_sprits
     all_sprites.update()
+    #timers
+    timer += 1/60
 
     
     pygame.display.flip()
