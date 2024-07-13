@@ -2,6 +2,7 @@ import pygame
 from random import randint
 import sys
 
+
 # Инициализация Pygame
 pygame.init()
 
@@ -22,6 +23,17 @@ FPS = 60
 font = pygame.font.SysFont("Arial", 32)
 font1 =pygame.font.SysFont("Arial", 22)
 
+#Seting game
+#items
+items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50, "count": 0}, "wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100, "count": 0}, "axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 50}}
+coins = 0
+level_player = 0
+progras_level = 0
+count_apple = 0
+count_wood = 0
+
+
+
 def bacgraund():
     bacgraund_image = pygame.transform.scale(pygame.image.load("Image/BackGraund.png"), (WIDTH, HEIGHT))
     bacgraund_rect = bacgraund_image.get_rect()
@@ -31,21 +43,13 @@ def bacgraund():
 
 #List sprites
 all_sprites = pygame.sprite.Group()
-
-#items
-items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50, "count": 0}, "wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100, "count": 0}, "axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 50}}
-
 #Player
-up_move = False
-down_move = False
-right_move =False
-left_move = False
-speed_player = 5
-
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, speed):
         super().__init__()
         #player
+        self.speed = speed
+
         self.image = pygame.Surface((60, 70))
         self.image = pygame.transform.scale(pygame.image.load("Image/Player.png"), (60, 70))
         self.rect = self.image.get_rect()
@@ -53,80 +57,21 @@ class Player(pygame.sprite.Sprite):
         
     def update(self):
         screen.blit(self.image, self.rect)
-    def event_button(self, event):
-         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                self.rect.x -= speed_player
-            if event.key == pygame.K_d:
-                self.rect.x += speed_player
-            if event.key == pygame.K_w:
-                self.rect.y -= speed_player
-            if event.key == pygame.K_s:
-                self.rect.y += speed_player
-player = Player()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            self.rect.x -= self.speed
+        if keys[pygame.K_d]:
+            self.rect.x += self.speed
+        if keys[pygame.K_w]:
+            self.rect.y -= self.speed
+        if keys[pygame.K_s]:
+            self.rect.y += self.speed
+player = Player(3)
 all_sprites.add(player)
-
-#garden
-garden_active = False
-grow = False
-timer = 0
-class Garden(pygame.sprite.Sprite):
-    def __init__(self, x, y, gardenActive):
-        super().__init__()
-        self.active = gardenActive
-        
-        self.image = pygame.transform.scale(pygame.image.load("Image/garden.png"), (60, 60))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-        self.sead_image =pygame.transform.scale(pygame.image.load("Image/sead.png"), (50, 50))
-        self.sead_rect = self.sead_image.get_rect()
-        self.sead_rect.x = self.rect.x + 5
-        self.rect.y = self.rect.y + 5
-
-        self.StartTree_image = pygame.transform.scale(pygame.image.load("Image/Start_tree.png"),(40, 90))
-        self.StartTree_rect = self.StartTree_image.get_rect()
-        self.StartTree_rect.x = self.rect.x + 5
-        self.StartTree_rect.y = self.rect.y - 30
-
-        self.FinishTree_image = pygame.transform.scale(pygame.image.load("Image/FinishTree.png"), (60, 95))
-        self.FinishTree_rect = self.FinishTree_image.get_rect()
-        self.FinishTree_rect.x = self.rect.x + 5
-        self.FinishTree_rect.y = self.rect.y - 40
-
-        self.ApelTree_image = pygame.transform.scale(pygame.image.load("Image/TreewithApel.png"), (60, 95))
-        self.ApelTree_rect = self.ApelTree_image.get_rect()
-        self.ApelTree_rect.x = self.rect.x + 5
-        self.ApelTree_rect.y = self.rect.y - 40
-    def update(self):
-        screen.blit(self.image, self.rect)
-        if grow and self.active:
-            if timer >=0 and timer <= 5:
-                screen.blit(self.sead_image, self.sead_rect)
-            if timer >= 5 and timer <= 10:
-                screen.blit(self.StartTree_image, self.StartTree_rect)
-
-            if timer >= 10 and timer <= 15:
-                screen.blit(self.FinishTree_image, self.FinishTree_rect)
-            if timer >= 15:
-                screen.blit(self.ApelTree_image, self.ApelTree_rect)
-    def event_button(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e and player.rect.colliderect(self.rect) and grow == False and self.active:
-                grow = True
-                timer = 0
-            if event.key == pygame.K_e and player.rect.colliderect(self.rect) and grow and self.active == False:
-                grow = False
-                
-#Gardens
-garden = Garden(100, 500, True)
-all_sprites.add(garden)
-
 
 #Level
 num_level = 0
-bar_level = 0.5
+bar_level = progras_level
 
 class Bar(pygame.sprite.Sprite):
     def __init__(self, x, y, font, text, text_num, level):
@@ -159,8 +104,8 @@ class Coins(pygame.sprite.Sprite):
         #Coins
         self.coins_image = pygame.transform.scale(pygame.image.load("Image/Coins.png"), (40, 40))
         self.coins_rect = self.coins_image.get_rect()
-        self.coin_rect.x = 10
-        self.coin_rect.y = 40
+        self.coins_rect.x = 10
+        self.coins_rect.y = 40
     def event_button(self, event):
         pass
         
@@ -267,13 +212,75 @@ market_slot1 = UI_Market_slot(120, 20, "apple", Market_active, font1)
 
 all_sprites.add(market_slot, market_slot1)
 
+#garden
+timer = 0
+class Garden(pygame.sprite.Sprite):
+    def __init__(self, x, y, gardenActive, grow_open):
+        super().__init__()
+        self.active = gardenActive
+        self.open = grow_open
+        
+        self.image = pygame.transform.scale(pygame.image.load("Image/garden.png"), (60, 60))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        self.sead_image =pygame.transform.scale(pygame.image.load("Image/sead.png"), (50, 50))
+        self.sead_rect = self.sead_image.get_rect()
+        self.sead_rect.x = self.rect.x + 5
+        self.sead_rect.y = self.rect.y + 5
+
+        self.StartTree_image = pygame.transform.scale(pygame.image.load("Image/Start_tree.png"),(40, 90))
+        self.StartTree_rect = self.StartTree_image.get_rect()
+        self.StartTree_rect.x = self.rect.x + 5
+        self.StartTree_rect.y = self.rect.y - 30
+
+        self.FinishTree_image = pygame.transform.scale(pygame.image.load("Image/FinishTree.png"), (60, 95))
+        self.FinishTree_rect = self.FinishTree_image.get_rect()
+        self.FinishTree_rect.x = self.rect.x + 5
+        self.FinishTree_rect.y = self.rect.y - 40
+
+        self.ApelTree_image = pygame.transform.scale(pygame.image.load("Image/TreewithApel.png"), (60, 95))
+        self.ApelTree_rect = self.ApelTree_image.get_rect()
+        self.ApelTree_rect.x = self.rect.x + 5
+        self.ApelTree_rect.y = self.rect.y - 40
+
+    def update(self):
+        global timer
+        screen.blit(self.image, self.rect)
+        self.timer = timer
+        if self.active and self.open:
+            if self.timer >=0 and self.timer <= 5:
+                screen.blit(self.sead_image, self.sead_rect)
+            if self.timer >= 5 and self.timer <= 10:
+                screen.blit(self.StartTree_image, self.StartTree_rect)
+
+            if self.timer >= 10 and self.timer <= 15:
+                screen.blit(self.FinishTree_image, self.FinishTree_rect)
+            if self.timer >= 15:
+                screen.blit(self.ApelTree_image, self.ApelTree_rect)
+    def event_button(self):
+        global timer
+        if self.open and self.active == False and player.rect.colliderect(self.rect):
+            self.active = True
+            timer = 0
+        if self.open and self.active and player.rect.colliderect(self.rect) and self.timer >=15:
+            self.active = False
+#Gardens
+garden = Garden(100, 500, False, True)
+all_sprites.add(garden)
+
         
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        all_sprites.event_button()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                garden.event_button()
+
+
 
     screen.fill(BLACK)
     bacgraund()
@@ -289,7 +296,7 @@ while running:
     #UI all_sprits
     all_sprites.update()
     #timers
-    timer += 1/60
+    timer += 1/FPS
 
     
     pygame.display.flip()
