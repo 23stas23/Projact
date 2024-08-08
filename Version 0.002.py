@@ -47,6 +47,10 @@ font = pygame.font.SysFont("Arial", 32)
 font1 =pygame.font.SysFont("Arial", 22)
 
 #Seting game
+all_sprites = pygame.sprite.Group()
+all_item = pygame.sprite.Group()
+ToolsPlayer = pygame.sprite.Group()
+all_UIsprites = pygame.sprite.Group()
 #items
 items = {"Apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50}, "Wood":{"id": 2, "name": "Wood", "image": "Image/Wood.png", "cost": 100}, "Axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 150}}
 coins = 150
@@ -61,7 +65,7 @@ def bacgraund():
     screen.blit(bacgraund_image, bacgraund_rect)
 
 #List sprites
-all_sprites = pygame.sprite.Group()
+
 #Player
 class Player(pygame.sprite.Sprite):
     def __init__(self, speed):
@@ -104,9 +108,6 @@ player = Player(3)
 all_sprites.add(player)
 
 #tools item seting 
-Axe_open = True
-Axe_active =False
-
 class tools_player(pygame.sprite.Sprite): 
     def __init__(self, name, open, width, height, x, y, num_slot, active ):
         super().__init__()
@@ -116,9 +117,10 @@ class tools_player(pygame.sprite.Sprite):
         self.active = active 
 
         self.image = pygame.transform.scale(pygame.image.load(items[str(self.name)]["image"]), (width, height))
-        self.rect = self.image.get_rect(center = (player.rect.x + x, player.rect.y + y))
-    def update(self, active ):
-        self.active = active 
+        self.rect = self.image.get_rect(topleft = (player.rect.x + x, player.rect.y + y))
+    def update(self):
+        if self.active:
+            screen.blit(self.image, self.rect)
     def event_buttone(self):
         if self.open:
             if self.active:
@@ -126,12 +128,8 @@ class tools_player(pygame.sprite.Sprite):
             else: 
                 self.active = True
 
-        
-         
-ToolsPlayer = pygame.sprite.Group()
-
-Axe = tools_player("Axe", Axe_open, 35, 30, 20, 5, 1, Axe_active )
-ToolsPlayer.add(Axe)
+Axe_open = False
+Axe_active =False
 
 #Level
 num_level = 0
@@ -185,18 +183,18 @@ all_item.add(apple)
 
 #CoinsUI
 class UI_Coins(pygame.sprite.Sprite):
-    def __init__(self, num):
+    def __init__(self):
         super().__init__()
         self.coins_image = pygame.transform.scale(pygame.image.load("Image/Coins.png"), (40, 40))
         self.coins_rect = self.coins_image.get_rect(topleft = (WIDTH - 90, 10))
-
-        self.text = font.render(f"{num}", True, WHITE)
     def update(self):
+        global coins
+        self.text = font.render(f"{coins}", True, WHITE)
         screen.blit(self.coins_image, self.coins_rect)
         screen.blit(self.text, (self.coins_rect.x +50, 10))
 
-coinsUI = UI_Coins(coins)
-all_sprites.add(coinsUI)
+coinsUI = UI_Coins()
+all_UIsprites.add(coinsUI)
 
 #UI BackgroundUI
 class UI_Background(pygame.sprite.Sprite):
@@ -212,7 +210,7 @@ class UI_Background(pygame.sprite.Sprite):
 #Inventory
 InventoryActive = False
 inventory = UI_Background(100, 100, InventoryActive)
-all_sprites.add(inventory)
+all_UIsprites.add(inventory)
 
 #Inventory slot
 class UI_Inventory_slot(pygame.sprite.Sprite):
@@ -253,12 +251,12 @@ class UI_Inventory_slot(pygame.sprite.Sprite):
 slot = UI_Inventory_slot(10, 10, "Apple", font1, AppleCount)
 slot1 = UI_Inventory_slot(100, 10, "Wood", font1, WoodCount)
 
-all_sprites.add(slot, slot1)
+all_UIsprites.add(slot, slot1)
 
 #UI Market 
 Market_active = False
 market = UI_Background(100, 100, Market_active)
-all_sprites.add(market)
+all_UIsprites.add(market)
 
 class UI_Market_slot(pygame.sprite.Sprite):
     def __init__(self, x, y, item, active, font):
@@ -290,17 +288,21 @@ class UI_Market_slot(pygame.sprite.Sprite):
             Market_active = False
     def event_bayItem(self):
         global coins
-        self_cost = items[self.item]["cost"]
-        if coins == self_cost:
-            coins =- self_cost
-            self.active = True
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_click = pygame.mouse.get_pressed()
+        if Market_active:
+            if self.button_rect.collidepoint(mouse_pos) and mouse_click[0]:  # Left mouse button is pressed
+                self_cost = items[self.item]["cost"]
+                if coins >= self_cost:
+                    coins -= self_cost
+                    self.active = True
 
 
 #number slots
 market_slot = UI_Market_slot(20, 20, "Axe", Market_active, font1)
 market_slot1 = UI_Market_slot(120, 20, "Apple", Market_active, font1)
 
-all_sprites.add(market_slot, market_slot1)
+all_UIsprites.add(market_slot, market_slot1)
 
 #garden
 timer = 0
@@ -355,7 +357,7 @@ class Garden(pygame.sprite.Sprite):
         if self.open and self.active and player.rect.colliderect(self.rect) and self.timer >=15:
             self.active = False
 #Gardens
-garden = Garden(100, 500, False, True)
+garden = Garden(100, 500, False, False)
 all_sprites.add(garden)
 
         
@@ -380,26 +382,43 @@ while running:
             if event.key == pygame.K_1:
                 Axe.event_buttone()
         #if event.type == pygame.MOUSEBUTTONDOWN:
-        #    all_sprites
+            
 
 
 
     screen.fill(BLACK)
     inventory = UI_Background(100, 100, InventoryActive)
     market = UI_Background(100, 100, Market_active)
-    all_sprites.add(market)
-    all_sprites.add(inventory)
+    all_UIsprites.add(market)
+    all_UIsprites.add(inventory)
 
     bacgraund()
     #Player render
     screen.blit(player.image, player.rect)
     player.update()
+    
+    #Tools
+    Axe = tools_player("Axe", Axe_open, 35, 30, 20, 5, 1, Axe_active )
+    ToolsPlayer.add(Axe)
+
     #UI all_sprits
-    inventory.backgroundUI()
     all_sprites.update()
+    ToolsPlayer.update()
+
     all_item.update()
+
+    #render UIsprits
+    inventory.backgroundUI()
+    market.backgroundUI()
+    all_UIsprites.update()
+
+    #event bay item
+    market_slot.event_bayItem()
+    market_slot1.event_bayItem()
+
     #timers
     timer += 1/FPS
+    print(coins)
     
     pygame.display.flip()
     pygame.time.Clock().tick(60)
