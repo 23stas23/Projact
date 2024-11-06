@@ -1,4 +1,4 @@
-﻿import pygame
+import pygame
 from random import randint
 import sys
 
@@ -22,19 +22,16 @@ fence_group = []
 hand = True
 hand_open = True
 
-Axe = False
-Axe_open = True
 
-Gun = False
-Gun_open = False
-
-tools_group_equp =[]
+tools_group_equp =["Hand", "Axe"]
+tools = {"Hand":{"image":BLACK},"Axe":{"image": (100, 100, 100)}}
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, speed):
         super().__init__()
         self.speed = speed
+        self.tool = 0
         self.image = pygame.Surface((60, 70))
         self.image = pygame.transform.scale(pygame.image.load("Image/Player.png"), (60, 70))
         self.rect = self.image.get_rect(center = (500, 400))
@@ -67,24 +64,18 @@ class Player(pygame.sprite.Sprite):
                 if self.rect.colliderect(fence):
                     self.rect.y -= self.speed
                     break
+        
 
     def change_tools(self):
         global tools_group_equp
-        
-        tools = 0
+        if self.tool > 1:
+            self.tool = 0
+        name = tools_group_equp[self.tool]
 
-        for tools in tools_group_equp:
-            if  tools_group_equp[tools] == False and tools_group_equp[tools + 1] == True :
-                print(tools_group_equp[tools])
-                tools_group_equp[tools] = True
-                print(tools, tools_group_equp[tools])
-                
-            if tools == 0:
-                tools_group_equp[5] = False
-                print(5, tools_group_equp[5])
-            if tools >= 0:
-                tools_group_equp[tools - 2] = False
-                print(tools, tools_group_equp[tools-2])
+        
+        
+            
+            
 
 player = Player(3)
 all_sprites.add(player)
@@ -96,10 +87,16 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
             pygame.display.toggle_fullscreen()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
+            player.tool += 1
     screen.fill(BLACK)
     player.update()
     player.moving()
+    player.change_tools()
     pygame.display.flip()
+
+    print(player.tool)
+    
     pygame.time.Clock().tick(60)
 
 pygame.quit()
