@@ -94,7 +94,7 @@ coins_rect.y = 10
 #items
 items = {"apple": {"id": 1, "name":"Apple", "image":"Image/Appal.png", "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": "", "cost": 100}}
 tools = {"axe": {"id": 1, "name": "Axe", "image": "Image/Axe.png", "cost": 50}}
-UI_items = {"apple": {"id": 1, "name":"Apple", "image": pygame.transform.scale(pygame.image.load("Image/Appel.png"), (70, 70)), "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": pygame.transform.scale(pygame.image.load("Image/Wood.png"), (70, 70)), "cost": 100}}
+UI_items = {"apple": {"id": 1, "name":"Apple", "image": pygame.transform.scale(pygame.image.load("Image/Appal.png"), (70, 70)), "cost": 50}, "wood":{"id": 2, "name": "Wood", "image": pygame.transform.scale(pygame.image.load("Image/Start_tree.png"), (70, 70)), "cost": 100}}
 
 #Item Appel
 apel_in_screen = True
@@ -266,7 +266,7 @@ UI_Market_slot_rect2.x = UI_Market_rect.x + 20
 UI_Market_slot_rect2.y = UI_Market_rect.y + 230
 
 #UI Market slot item (2)
-UI_Market_slot_item_image2 = pygame.transform.scale(pygame.image.load("Image/Wood.png"), (50,50))
+UI_Market_slot_item_image2 = pygame.transform.scale(pygame.image.load("Image/Start_tree.png"), (50,50))
 UI_Market_slot_item_rect2 = UI_Market_slot_item_image2.get_rect()
 UI_Market_slot_item_rect2.x = UI_Market_slot_rect2.x + 5
 UI_Market_slot_item_rect2.y = UI_Market_slot_rect2.y + 5
